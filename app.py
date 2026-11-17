@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from data.sample_generator import generate_sample_logs
-from report_generator import TenneTReportAutomation
+from report_generator import GridReportAutomation
 
 st.set_page_config(
     page_title="Grid Incident & Automation Monitor",
@@ -9,10 +9,10 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("⚡ TenneT Grid Incident & Automation Reporting Portal")
+st.title("⚡ Grid Incident & Automation Reporting Portal")
 st.markdown("Automated operational brief generator for transmission grid events and Redispatch 2.0 incidents.")
 
-engine = TenneTReportAutomation()
+engine = GridReportAutomation()
 df = engine.load_and_validate_logs()
 kpis = engine.compute_kpis(df)
 

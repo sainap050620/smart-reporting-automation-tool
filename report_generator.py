@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 from data.sample_generator import generate_sample_logs
 
-class TenneTReportAutomation:
+class GridReportAutomation:
     """
     Automated Grid Incident & KPI Executive Reporting Engine.
     Processes raw telemetry and event logs into structured management briefs.
@@ -117,5 +117,5 @@ if __name__ == "__main__":
     parser.add_argument("--output", default="output/executive_briefing.md", help="Output file path")
     args = parser.parse_args()
 
-    engine = TenneTReportAutomation()
+    engine = GridReportAutomation()
     engine.generate_report(output_path=args.output)
