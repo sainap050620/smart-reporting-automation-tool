@@ -1,5 +1,8 @@
 # 📝 Automated Grid Incident Reporting
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://grid-incident-reporting.streamlit.app/)  
+**Live demo:** https://grid-incident-reporting.streamlit.app/
+
 Turns raw grid event logs into a **management-ready briefing** automatically: load and validate the data, compute KPIs, write an executive summary (optionally with an LLM), and export a Markdown report. Includes a **Streamlit** portal for interactive use.
 
 > The event logs are **synthetic** (50 seeded grid events across five substations), generated automatically on first run.
