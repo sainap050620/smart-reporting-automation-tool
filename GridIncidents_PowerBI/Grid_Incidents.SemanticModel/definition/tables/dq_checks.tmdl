@@ -1,0 +1,55 @@
+table dq_checks
+	lineageTag: 7e7b1daa-bc31-57ca-9007-10fc1ee4d97f
+
+	column Check
+		dataType: string
+		lineageTag: a9e8275c-0fe0-538f-bcba-377d040e5bf0
+		summarizeBy: none
+		sourceColumn: Check
+
+	column Rule
+		dataType: string
+		lineageTag: 5c0b8e4e-28b8-5d30-92d1-3830be784a5c
+		summarizeBy: none
+		sourceColumn: Rule
+
+	column Violations
+		dataType: int64
+		formatString: #,0
+		lineageTag: e4ce5a64-b22f-5d7d-abf7-a64e59e7f0f5
+		summarizeBy: none
+		sourceColumn: Violations
+
+	column Status
+		dataType: string
+		lineageTag: f5250f13-1fd4-546a-8e52-a6dd459b1f23
+		summarizeBy: none
+		sourceColumn: Status
+
+	partition dq_checks = m
+		mode: import
+		source =
+				let
+					// Violations are reported instead of stopping the refresh, so the report can show them.
+					Checks = #table(
+						type table [Check = text, Rule = text, Violations = Int64.Type],
+						{
+							{"Event ID is unique", "No duplicate event_id",
+								Table.RowCount(fact_events) - List.Count(List.Distinct(fact_events[event_id]))},
+							{"Timestamp is present", "timestamp is not empty",
+								Table.RowCount(Table.SelectRows(fact_events, each [timestamp] = null))},
+							{"Power is not negative", "feed_in_mw and curtailed_mw >= 0",
+								Table.RowCount(Table.SelectRows(fact_events, each [feed_in_mw] < 0 or [curtailed_mw] < 0))},
+							{"Curtailment is plausible", "curtailed_mw <= feed_in_mw",
+								Table.RowCount(Table.SelectRows(fact_events, each [curtailed_mw] > [feed_in_mw]))},
+							{"Substation keys resolve", "fact.substation_id exists in dim_substation",
+								List.Count(List.Difference(List.Distinct(fact_events[substation_id]), dim_substation[substation_id]))},
+							{"Event type keys resolve", "fact.event_type_id exists in dim_event_type",
+								List.Count(List.Difference(List.Distinct(fact_events[event_type_id]), dim_event_type[event_type_id]))}
+						}
+					),
+					WithStatus = Table.AddColumn(
+						Checks, "Status", each if [Violations] = 0 then "PASS" else "FAIL", type text
+					)
+				in
+					WithStatus

@@ -7,6 +7,8 @@ Turns raw grid event logs into a **management-ready briefing** automatically: lo
 
 > The event logs are **synthetic** (50 seeded grid events across five substations), generated automatically on first run.
 
+![Streamlit portal with KPI cards, incidents by substation, executive summary and event table](docs/dashboard.png)
+
 ## ⚙️ How It Works
 
 ```
@@ -28,6 +30,18 @@ report_generator.py        load + schema check → KPIs → executive summary �
 
 See [`output/executive_briefing.md`](output/executive_briefing.md) for an example report.
 
+## 📈 Power BI Version
+
+[`GridIncidents_PowerBI/`](GridIncidents_PowerBI/) rebuilds the analysis as a Power BI Project (`.pbip`):
+
+- **Data model:** event fact table with substation and event type dimensions
+- **DAX:** 13 measures covering event counts, curtailed energy and an executive briefing
+- **Report:** Operations Overview, Executive Briefing, Event Log, Data Quality
+
+Open `Grid_Incidents.pbip` in Power BI Desktop and click **Refresh**. See the
+[Power BI guide](GridIncidents_PowerBI/README.md) for setup, expected figures and verification status.
+The committed CSVs in `data/processed/` can be rebuilt with `python -m data.export_powerbi`.
+
 ## 🚀 Quickstart
 
 ```bash
@@ -44,6 +58,26 @@ streamlit run app.py
 
 Optional: `export OPENAI_API_KEY=...` to let an LLM write the summary.
 
+Or run the dashboard with Docker, then open http://localhost:8501:
+
+```bash
+docker build -t grid-reporting .
+docker run --rm -p 8501:8501 grid-reporting
+```
+
+## 🧪 Tests
+
+```bash
+pip install pytest
+python -m pytest tests/
+```
+
+GitHub Actions runs the tests on pushes and pull requests to `main`.
+
 ## 🛠️ Tech Stack
 
-Python · Pandas · Streamlit · OpenAI API (optional) · Markdown reporting
+Python · Pandas · Streamlit · OpenAI API (optional) · Markdown reporting · Power BI (DAX, Power Query) · Docker · pytest
+
+## 📄 License
+
+[MIT](LICENSE)

@@ -1,0 +1,67 @@
+// 1 Events
+Total Events =
+    COUNTROWS(fact_events)
+
+// 1 Events
+Critical Events =
+    COALESCE(CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] = "CRITICAL")), 0)
+
+// 1 Events
+Warning Events =
+    COALESCE(CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] = "WARNING")), 0)
+
+// 1 Events
+Stressed Events =
+    CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] <> "INFO"))
+
+// 1 Events
+Critical Share % =
+    DIVIDE([Critical Events], [Total Events])
+
+// 2 Energy
+Curtailed Energy MWh =
+    SUM(fact_events[curtailed_mw]) * 0.5
+
+// 2 Energy
+Feed-In Energy MWh =
+    SUM(fact_events[feed_in_mw]) * 0.5
+
+// 2 Energy
+Curtailment % =
+    DIVIDE([Curtailed Energy MWh], [Feed-In Energy MWh])
+
+// 3 Briefing
+Most Stressed Substation =
+    VAR Ranked =
+        ADDCOLUMNS(VALUES(dim_substation[substation]), "@Stressed", [Stressed Events])
+    VAR Leader =
+        TOPN(
+            1,
+            FILTER(Ranked, [@Stressed] > 0),
+            [@Stressed], DESC,
+            dim_substation[substation], ASC
+        )
+    RETURN
+        MAXX(Leader, dim_substation[substation])
+
+// 3 Briefing
+Grid Status =
+    IF([Critical Events] > 0, "ACTION REQUIRED", "NOMINAL")
+
+// 3 Briefing
+Summary: Stability =
+    "Recorded " & [Critical Events] & " critical incidents and "
+        & [Warning Events] & " stability warnings."
+
+// 3 Briefing
+Summary: Redispatch =
+    "Total curtailment reached "
+        & FORMAT(COALESCE([Curtailed Energy MWh], 0), "#,0.0") & " MWh."
+
+// 3 Briefing
+Summary: Bottleneck =
+    IF(
+        ISBLANK([Most Stressed Substation]),
+        "No substation recorded warnings or critical events.",
+        [Most Stressed Substation] & " recorded the most warnings and critical events."
+    )

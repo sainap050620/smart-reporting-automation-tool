@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "ov_type",
+  "position": {
+    "x": 780,
+    "y": 150,
+    "z": 7000,
+    "height": 550,
+    "width": 480,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_event_type"
+                    }
+                  },
+                  "Property": "event_type"
+                }
+              },
+              "queryRef": "dim_event_type.event_type",
+              "nativeQueryRef": "event_type",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Curtailed Energy MWh"
+                }
+              },
+              "queryRef": "fact_events.Curtailed Energy MWh",
+              "nativeQueryRef": "Curtailed Energy MWh"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_events"
+                  }
+                },
+                "Property": "Curtailed Energy MWh"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Curtailed Energy by Event Type (MWh)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

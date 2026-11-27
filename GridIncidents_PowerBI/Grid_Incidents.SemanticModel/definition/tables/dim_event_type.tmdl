@@ -1,0 +1,49 @@
+table dim_event_type
+	lineageTag: f352670a-ba36-5d6a-9b4f-76897a21773b
+
+	column event_type_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ab41f865-de0a-5e78-9537-cf1df180d08f
+		summarizeBy: none
+		sourceColumn: event_type_id
+
+	column event_type
+		dataType: string
+		lineageTag: 9ec25113-14df-5e1d-b27a-5ddce13688a6
+		summarizeBy: none
+		sourceColumn: event_type
+
+	column severity
+		dataType: string
+		lineageTag: bbd7c16c-e6fa-5804-86b1-222a471e11c4
+		summarizeBy: none
+		sourceColumn: severity
+		sortByColumn: severity_rank
+
+	column severity_rank
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a9043e6f-86d0-577c-ae9b-62c82af928f7
+		summarizeBy: none
+		sourceColumn: severity_rank
+
+	partition dim_event_type = m
+		mode: import
+		source =
+				let
+					Source = GetCsv("dim_event_type.csv"),
+					Typed = Table.TransformColumnTypes(
+						Source,
+						{
+							{"event_type_id", Int64.Type},
+							{"event_type", type text},
+							{"severity", type text},
+							{"severity_rank", Int64.Type}
+						},
+						"en-US"
+					)
+				in
+					Typed

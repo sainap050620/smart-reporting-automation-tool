@@ -1,0 +1,148 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "br_table",
+  "position": {
+    "x": 20,
+    "y": 485,
+    "z": 4000,
+    "height": 215,
+    "width": 1240,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_substation"
+                    }
+                  },
+                  "Property": "substation"
+                }
+              },
+              "queryRef": "dim_substation.substation",
+              "nativeQueryRef": "substation",
+              "active": true
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Total Events"
+                }
+              },
+              "queryRef": "fact_events.Total Events",
+              "nativeQueryRef": "Total Events"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Critical Events"
+                }
+              },
+              "queryRef": "fact_events.Critical Events",
+              "nativeQueryRef": "Critical Events"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Warning Events"
+                }
+              },
+              "queryRef": "fact_events.Warning Events",
+              "nativeQueryRef": "Warning Events"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Curtailed Energy MWh"
+                }
+              },
+              "queryRef": "fact_events.Curtailed Energy MWh",
+              "nativeQueryRef": "Curtailed Energy MWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Curtailment %"
+                }
+              },
+              "queryRef": "fact_events.Curtailment %",
+              "nativeQueryRef": "Curtailment %"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_events"
+                  }
+                },
+                "Property": "Curtailed Energy MWh"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Substation Indicators'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

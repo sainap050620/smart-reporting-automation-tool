@@ -1,0 +1,98 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "ov_substation",
+  "position": {
+    "x": 260,
+    "y": 150,
+    "z": 6000,
+    "height": 550,
+    "width": 500,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "columnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_substation"
+                    }
+                  },
+                  "Property": "substation"
+                }
+              },
+              "queryRef": "dim_substation.substation",
+              "nativeQueryRef": "substation",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_event_type"
+                    }
+                  },
+                  "Property": "severity"
+                }
+              },
+              "queryRef": "dim_event_type.severity",
+              "nativeQueryRef": "severity",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "Total Events"
+                }
+              },
+              "queryRef": "fact_events.Total Events",
+              "nativeQueryRef": "Total Events"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Events by Substation and Severity'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
