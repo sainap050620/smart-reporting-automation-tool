@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "dim_substation.substation",
-              "nativeQueryRef": "substation",
-              "active": true
+              "nativeQueryRef": "substation"
             },
             {
               "field": {
