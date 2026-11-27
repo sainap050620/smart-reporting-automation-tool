@@ -38,8 +38,10 @@ See [`output/executive_briefing.md`](output/executive_briefing.md) for an exampl
 - **DAX:** 13 measures covering event counts, curtailed energy and an executive briefing
 - **Report:** Operations Overview, Executive Briefing, Event Log, Data Quality
 
+![Operations Overview page of the Power BI report](docs/powerbi/1-operations-overview.png)
+
 Open `Grid_Incidents.pbip` in Power BI Desktop and click **Refresh**. See the
-[Power BI guide](GridIncidents_PowerBI/README.md) for setup, expected figures and verification status.
+[Power BI guide](GridIncidents_PowerBI/README.md) for setup, expected figures and all report pages.
 The committed CSVs in `data/processed/` can be rebuilt with `python -m data.export_powerbi`.
 
 ## 🚀 Quickstart
