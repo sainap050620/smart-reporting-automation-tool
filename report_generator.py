@@ -17,7 +17,10 @@ class GridReportAutomation:
         if not os.path.exists(self.log_path):
             generate_sample_logs()
         df = pd.read_csv(self.log_path)
-        assert "timestamp" in df.columns and "event_type" in df.columns, "Schema validation failed."
+        required = {"timestamp", "substation", "event_type", "severity", "curtailed_mw"}
+        missing = required - set(df.columns)
+        if missing:
+            raise ValueError(f"Schema validation failed. Missing columns: {sorted(missing)}")
         return df
 
     def compute_kpis(self, df: pd.DataFrame) -> dict:

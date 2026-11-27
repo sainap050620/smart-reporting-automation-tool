@@ -48,4 +48,4 @@ with right_col:
         )
 
 st.subheader("Raw Telemetry & Alarm Stream")
-st.dataframe(df, use_container_width=True)
+st.dataframe(df, width="stretch")

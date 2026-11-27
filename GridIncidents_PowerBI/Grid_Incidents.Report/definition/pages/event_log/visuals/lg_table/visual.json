@@ -1,0 +1,168 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "lg_table",
+  "position": {
+    "x": 260,
+    "y": 20,
+    "z": 1000,
+    "height": 680,
+    "width": 1000,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "event_id"
+                }
+              },
+              "queryRef": "fact_events.event_id",
+              "nativeQueryRef": "event_id",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "timestamp"
+                }
+              },
+              "queryRef": "fact_events.timestamp",
+              "nativeQueryRef": "timestamp",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_substation"
+                    }
+                  },
+                  "Property": "substation"
+                }
+              },
+              "queryRef": "dim_substation.substation",
+              "nativeQueryRef": "substation",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_event_type"
+                    }
+                  },
+                  "Property": "event_type"
+                }
+              },
+              "queryRef": "dim_event_type.event_type",
+              "nativeQueryRef": "event_type",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_event_type"
+                    }
+                  },
+                  "Property": "severity"
+                }
+              },
+              "queryRef": "dim_event_type.severity",
+              "nativeQueryRef": "severity",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "feed_in_mw"
+                }
+              },
+              "queryRef": "fact_events.feed_in_mw",
+              "nativeQueryRef": "feed_in_mw",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_events"
+                    }
+                  },
+                  "Property": "curtailed_mw"
+                }
+              },
+              "queryRef": "fact_events.curtailed_mw",
+              "nativeQueryRef": "curtailed_mw",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_events"
+                  }
+                },
+                "Property": "timestamp"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Telemetry and Alarm Stream'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

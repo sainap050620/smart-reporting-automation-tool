@@ -1,0 +1,7 @@
+relationship 6e8cd4db-b906-5421-950f-59b9753b8664
+	fromColumn: fact_events.substation_id
+	toColumn: dim_substation.substation_id
+
+relationship 375ed4d0-2529-56a7-bb70-23ecbb3dd33a
+	fromColumn: fact_events.event_type_id
+	toColumn: dim_event_type.event_type_id

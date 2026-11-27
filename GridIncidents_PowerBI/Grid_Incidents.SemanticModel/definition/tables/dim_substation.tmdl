@@ -1,0 +1,32 @@
+table dim_substation
+	lineageTag: ba707f42-0388-5de0-ab49-71d85bb2c524
+
+	column substation_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fd7543f8-c3fb-54d0-b80a-b159145106a2
+		summarizeBy: none
+		sourceColumn: substation_id
+
+	column substation
+		dataType: string
+		lineageTag: 5028ef18-64e9-57c3-9822-ad747f78db11
+		summarizeBy: none
+		sourceColumn: substation
+
+	partition dim_substation = m
+		mode: import
+		source =
+				let
+					Source = GetCsv("dim_substation.csv"),
+					Typed = Table.TransformColumnTypes(
+						Source,
+						{
+							{"substation_id", Int64.Type},
+							{"substation", type text}
+						},
+						"en-US"
+					)
+				in
+					Typed

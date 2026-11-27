@@ -1,0 +1,6 @@
+event_type_id,event_type,severity,severity_rank
+1,Nominal Operation,INFO,3
+2,Redispatch 2.0 Requested,CRITICAL,1
+3,Thermal Overload,CRITICAL,1
+4,Voltage Fluctuation,WARNING,2
+5,Wind Feed-In Surge,WARNING,2

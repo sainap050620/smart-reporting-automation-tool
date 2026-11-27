@@ -1,0 +1,25 @@
+expression DataBaseUrl = "https://raw.githubusercontent.com/sainap050620/smart-reporting-automation-tool/main/data/processed" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: f04b5075-59cb-59ba-a100-89b041a72537
+	queryGroup: Parameters
+
+expression GetCsv =
+		(fileName as text) as table =>
+		let
+			// DataBaseUrl is a parameter: an https:// folder URL (default: the GitHub repo)
+			// or a local folder path such as C:\Data\processed
+			Source =
+				if Text.StartsWith(DataBaseUrl, "http") then
+					Csv.Document(
+						Web.Contents(DataBaseUrl, [RelativePath = fileName]),
+						[Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					)
+				else
+					Csv.Document(
+						File.Contents(DataBaseUrl & "\" & fileName),
+						[Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					),
+			Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true])
+		in
+			Promoted
+	lineageTag: ba956c51-5064-5f1e-ac61-aefd6af1366a
+	queryGroup: Functions

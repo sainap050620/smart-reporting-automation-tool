@@ -1,0 +1,146 @@
+table fact_events
+	lineageTag: c350a2de-865c-5bba-967b-0d14810674b5
+
+	measure 'Total Events' = COUNTROWS(fact_events)
+		formatString: #,0
+		displayFolder: 1 Events
+		lineageTag: 69b869af-9a2a-5836-ac0c-7beb55c53766
+
+	measure 'Critical Events' = COALESCE(CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] = "CRITICAL")), 0)
+		formatString: #,0
+		displayFolder: 1 Events
+		lineageTag: d16938a6-0e39-5771-8e43-e56318840544
+
+	measure 'Warning Events' = COALESCE(CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] = "WARNING")), 0)
+		formatString: #,0
+		displayFolder: 1 Events
+		lineageTag: 40531e95-75ce-5a67-8c20-e1655cf8c508
+
+	measure 'Stressed Events' = CALCULATE([Total Events], KEEPFILTERS(dim_event_type[severity] <> "INFO"))
+		formatString: #,0
+		displayFolder: 1 Events
+		lineageTag: 1e903a8f-cd1f-592a-8b26-00dea6a7d9bb
+
+	measure 'Critical Share %' = DIVIDE([Critical Events], [Total Events])
+		formatString: 0.0%
+		displayFolder: 1 Events
+		lineageTag: 3b75afe2-8be6-5ea9-a333-dc1f0d60427a
+
+	measure 'Curtailed Energy MWh' = SUM(fact_events[curtailed_mw]) * 0.5
+		formatString: #,0.0
+		displayFolder: 2 Energy
+		lineageTag: 2a37d5f8-07c4-5a43-b199-ac17286baf9e
+
+	measure 'Feed-In Energy MWh' = SUM(fact_events[feed_in_mw]) * 0.5
+		formatString: #,0.0
+		displayFolder: 2 Energy
+		lineageTag: 52fd9aef-0113-50a7-a2ff-347b40235645
+
+	measure 'Curtailment %' = DIVIDE([Curtailed Energy MWh], [Feed-In Energy MWh])
+		formatString: 0.0%
+		displayFolder: 2 Energy
+		lineageTag: cfb7d2fb-694f-5552-bcee-81b74cacd1f7
+
+	measure 'Most Stressed Substation' =
+			VAR Ranked =
+				ADDCOLUMNS(VALUES(dim_substation[substation]), "@Stressed", [Stressed Events])
+			VAR Leader =
+				TOPN(
+					1,
+					FILTER(Ranked, [@Stressed] > 0),
+					[@Stressed], DESC,
+					dim_substation[substation], ASC
+				)
+			RETURN
+				MAXX(Leader, dim_substation[substation])
+		displayFolder: 3 Briefing
+		lineageTag: 613da31d-f83b-559a-8408-719cc660ce95
+
+	measure 'Grid Status' = IF([Critical Events] > 0, "ACTION REQUIRED", "NOMINAL")
+		displayFolder: 3 Briefing
+		lineageTag: b7abc587-b6e8-5094-a740-e4b6d774b5fe
+
+	measure 'Summary: Stability' =
+			"Recorded " & [Critical Events] & " critical incidents and "
+				& [Warning Events] & " stability warnings."
+		displayFolder: 3 Briefing
+		lineageTag: c55b393d-d333-5a34-b6ee-9ee29836685e
+
+	measure 'Summary: Redispatch' =
+			"Total curtailment reached "
+				& FORMAT(COALESCE([Curtailed Energy MWh], 0), "#,0.0") & " MWh."
+		displayFolder: 3 Briefing
+		lineageTag: 556a93c4-c90f-5e22-af78-74f7d9a36465
+
+	measure 'Summary: Bottleneck' =
+			IF(
+				ISBLANK([Most Stressed Substation]),
+				"No substation recorded warnings or critical events.",
+				[Most Stressed Substation] & " recorded the most warnings and critical events."
+			)
+		displayFolder: 3 Briefing
+		lineageTag: 628050f7-3025-5442-a951-45017927e3a8
+
+	column event_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 42d52b77-dcc4-5fe7-bdbb-d1ac04bbb8d5
+		summarizeBy: none
+		sourceColumn: event_id
+
+	column timestamp
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: bbd04357-6b63-5074-83ab-0af4101458c1
+		summarizeBy: none
+		sourceColumn: timestamp
+
+	column substation_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8a1b64a1-08a0-549f-9ae9-76e5598daa22
+		summarizeBy: none
+		sourceColumn: substation_id
+
+	column event_type_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 29cab4d8-6926-5787-9343-d125a93bb01d
+		summarizeBy: none
+		sourceColumn: event_type_id
+
+	column feed_in_mw
+		dataType: int64
+		formatString: #,0
+		lineageTag: 06ed9859-2d01-58aa-8351-80fef8f7cfa7
+		summarizeBy: none
+		sourceColumn: feed_in_mw
+
+	column curtailed_mw
+		dataType: int64
+		formatString: #,0
+		lineageTag: 56bf56da-79ba-5767-89e3-2f6fc0865fc8
+		summarizeBy: none
+		sourceColumn: curtailed_mw
+
+	partition fact_events = m
+		mode: import
+		source =
+				let
+					Source = GetCsv("fact_events.csv"),
+					Typed = Table.TransformColumnTypes(
+						Source,
+						{
+							{"event_id", Int64.Type},
+							{"timestamp", type datetime},
+							{"substation_id", Int64.Type},
+							{"event_type_id", Int64.Type},
+							{"feed_in_mw", Int64.Type},
+							{"curtailed_mw", Int64.Type}
+						},
+						"en-US"
+					)
+				in
+					Typed
