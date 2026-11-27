@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "fact_events.event_id",
-              "nativeQueryRef": "event_id",
-              "active": true
+              "nativeQueryRef": "event_id"
             },
             {
               "field": {
@@ -42,8 +41,7 @@
                 }
               },
               "queryRef": "fact_events.timestamp",
-              "nativeQueryRef": "timestamp",
-              "active": true
+              "nativeQueryRef": "timestamp"
             },
             {
               "field": {
@@ -57,8 +55,7 @@
                 }
               },
               "queryRef": "dim_substation.substation",
-              "nativeQueryRef": "substation",
-              "active": true
+              "nativeQueryRef": "substation"
             },
             {
               "field": {
@@ -72,8 +69,7 @@
                 }
               },
               "queryRef": "dim_event_type.event_type",
-              "nativeQueryRef": "event_type",
-              "active": true
+              "nativeQueryRef": "event_type"
             },
             {
               "field": {
@@ -87,8 +83,7 @@
                 }
               },
               "queryRef": "dim_event_type.severity",
-              "nativeQueryRef": "severity",
-              "active": true
+              "nativeQueryRef": "severity"
             },
             {
               "field": {
@@ -102,8 +97,7 @@
                 }
               },
               "queryRef": "fact_events.feed_in_mw",
-              "nativeQueryRef": "feed_in_mw",
-              "active": true
+              "nativeQueryRef": "feed_in_mw"
             },
             {
               "field": {
@@ -117,8 +111,7 @@
                 }
               },
               "queryRef": "fact_events.curtailed_mw",
-              "nativeQueryRef": "curtailed_mw",
-              "active": true
+              "nativeQueryRef": "curtailed_mw"
             }
           ]
         }
